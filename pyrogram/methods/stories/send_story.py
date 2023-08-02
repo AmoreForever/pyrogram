@@ -201,7 +201,7 @@ class SendStory:
                                 pinned=pinned,
                                 noforwards=no_forwards,
                                 caption=message,
-                                caption_entities=entities,
+                                entities=entities,
                                 period=period,
                             )
                         )
