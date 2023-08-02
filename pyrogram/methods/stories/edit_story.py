@@ -177,25 +177,19 @@ class EditStory:
                         file=file,
                     )
 
-                while True:
-                    try:
-                        r = await self.invoke(
-                            raw.functions.stories.EditStory(
-                                id=story_id,
-                                media=media,
-                                caption=message,
-                                entities=entities,
-                                privacy_rules=privacy_rules,
-                            )
+                    r = await self.invoke(
+                        raw.functions.stories.EditStory(
+                            id=story_id,
+                            media=media,
+                            caption=message,
+                            entities=entities,
+                            privacy_rules=privacy_rules,
                         )
-                    except FilePartMissing as e:
-                        await self.save_file(media, file_id=file.id, file_part=e.value)
-                    else:
-                        for i in r.updates:
-                            if isinstance(i, (raw.types.UpdateShortSentMessage,
-                                              raw.types.UpdateShort)):
-                                return await types.UpdateStory._parse(
-                                    i.id, i.media
-                                )
+                    )
+                    for i in r.updates:
+                        if isinstance(i, raw.types.UpdateStory):
+                            return types.UpdateStory._parse(
+                                story=i
+                            )
         except StopTransmission:
             return None
