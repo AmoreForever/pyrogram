@@ -100,6 +100,12 @@ class User(Object, Update):
         is_premium (``bool``, *optional*):
             True, if this user is a premium user.
 
+        stories_hidden (``bool``, *optional*):
+            True, if this user has hidden their stories.
+
+        stories_unavailable (``bool``, *optional*):
+            True, if this user has no stories available.
+
         first_name (``str``, *optional*):
             User's or bot's first name.
 
@@ -146,6 +152,9 @@ class User(Object, Update):
             The list of reasons why this bot might be unavailable to some users.
             This field is available only in case *is_restricted* is True.
 
+        stories_max_id (``int``, *optional*):
+            The maximum ID of the stories posted by this user. Available only in case the user has posted at least one story.
+
         mention (``str``, *property*):
             Generate a text mention for this user.
             You can use ``user.mention()`` to mention the user using their first name (styled using html), or
@@ -169,6 +178,8 @@ class User(Object, Update):
         is_fake: bool = None,
         is_support: bool = None,
         is_premium: bool = None,
+        stories_hidden: bool = None,
+        stories_unavailable: bool = None,
         first_name: str = None,
         last_name: str = None,
         full_name: str = None,
@@ -182,7 +193,8 @@ class User(Object, Update):
         dc_id: int = None,
         phone_number: str = None,
         photo: "types.ChatPhoto" = None,
-        restrictions: List["types.Restriction"] = None
+        restrictions: List["types.Restriction"] = None,
+        stories_max_id: int = None
     ):
         super().__init__(client)
 
@@ -198,6 +210,8 @@ class User(Object, Update):
         self.is_fake = is_fake
         self.is_support = is_support
         self.is_premium = is_premium
+        self.stories_hidden = stories_hidden
+        self.stories_unavailable = stories_unavailable
         self.first_name = first_name
         self.last_name = last_name
         self.full_name = full_name
@@ -212,6 +226,7 @@ class User(Object, Update):
         self.phone_number = phone_number
         self.photo = photo
         self.restrictions = restrictions
+        self.stories_max_id = stories_max_id
 
     @property
     def mention(self):
@@ -239,6 +254,8 @@ class User(Object, Update):
             is_fake=user.fake,
             is_support=user.support,
             is_premium=user.premium,
+            stories_hidden=user.stories_hidden,
+            stories_unavailable=user.stories_unavailable,
             first_name=user.first_name,
             last_name=user.last_name,
             full_name=" ".join(filter(None, [user.first_name, user.last_name])) or None,
@@ -251,6 +268,7 @@ class User(Object, Update):
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
             restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
+            stories_max_id=user.stories_max_id,
             client=client
         )
 
