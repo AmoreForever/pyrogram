@@ -59,6 +59,7 @@ class Object:
 
         if isinstance(obj, datetime):
             return str(obj)
+
         return {
             "_": obj.__class__.__name__,
             **{
@@ -66,7 +67,7 @@ class Object:
                     "*" * 9 if attr == "phone_number" else
                     getattr(obj, attr)
                 )
-                for attr in filter(lambda x: not x.startswith("_"), obj.__dir__())
+                for attr in filter(lambda x: not x.startswith("_"), obj.__dict__)
                 if getattr(obj, attr) is not None
             }
         }
