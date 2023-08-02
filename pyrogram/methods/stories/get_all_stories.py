@@ -24,7 +24,7 @@ from pyrogram import types
 
 
 class GetAllStories:
-    async def get_all_read_user_stories(
+    async def get_all_stories(
         self: "pyrogram.Client",
         next: Optional[bool] = None,
         hidden: Optional[bool] = None,

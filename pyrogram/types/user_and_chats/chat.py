@@ -322,7 +322,9 @@ class Chat(Object):
             parsed_chat.stories_pinned_available = full_user.stories_pinned_available
 
             if full_user.stories:
-                parsed_chat.stories = await client.get_user_stories(full_user.id)
+                parsed_chat.stories = (await client.get_user_stories(
+                    full_user.id
+                )).stories
             if full_user.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
                     parsed_chat.id,

@@ -23,11 +23,11 @@ from pyrogram import raw
 from pyrogram import types
 
 
-class GetAllReadUserStories:
-    async def get_all_read_user_stories(
+class GetAllReadedStories:
+    async def get_all_readed_stories(
         self: "pyrogram.Client",
-    ) -> List["types.AllReadedUserStories"]:
-        """Get all read user stories.
+    ) -> List["types.AllReadedStories"]:
+        """Get all readed stories.
 
         .. include:: /_includes/usable-by/users-bots.rst
 
@@ -49,4 +49,4 @@ class GetAllReadUserStories:
         r = await self.invoke(
             raw.functions.stories.GetAllReadUserStories()
         )
-        return types.AllReadUserStories._parse(r)
+        return types.AllReadedStories._parse(r)

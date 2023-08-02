@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
+from pyrogram import types
 from ..object import Object
 
 
@@ -42,8 +43,10 @@ class AllReadedStories(Object):
         self.max_id = max_id
 
     @staticmethod
-    def _parse(story: "raw.types.UpdateReadStories") -> "AllReadedStories":
-        return AllReadedStories(
-            user_id=story.user_id,
-            max_id=story.max_id
+    def _parse(stories: "raw.types.UpdateReadStories") -> "AllReadedStories":
+        return types.List(
+            AllReadedStories(
+                user_id=story.user_id,
+                max_id=story.max_id
+            ) for story in stories.stories
         )

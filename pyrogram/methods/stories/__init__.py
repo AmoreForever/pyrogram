@@ -19,7 +19,7 @@
 from .delete_stories import DeleteStories
 from .edit_story import EditStory
 from .export_story_link import ExportStoryLink
-from .get_all_read_user_stories import GetAllReadUserStories
+from .get_all_readed_stories import GetAllReadedStories
 from .get_all_stories import GetAllStories
 from .get_pinned_stories import GetPinnedStories
 from .get_stories_archive import GetStoriesArchive
@@ -39,7 +39,7 @@ class Stories(
     DeleteStories,
     EditStory,
     ExportStoryLink,
-    GetAllReadUserStories,
+    GetAllReadedStories,
     GetAllStories,
     GetPinnedStories,
     GetStoriesArchive,
