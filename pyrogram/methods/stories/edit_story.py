@@ -118,7 +118,7 @@ class EditStory:
             )
         """
 
-        message, entities = (await utils.parse_text_entities(self, caption, parse_mode, caption_entities).values())
+        message, entities = (await utils.parse_text_entities(self, caption, parse_mode, caption_entities)).values()
 
         try:
             if isinstance(media, str):

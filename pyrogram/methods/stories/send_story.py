@@ -132,7 +132,7 @@ class SendStory:
             app.send_story("video.mp4", progress=progress)
         """
 
-        message, entities = (await utils.parse_text_entities(self, caption, parse_mode, caption_entities).values())
+        message, entities = (await utils.parse_text_entities(self, caption, parse_mode, caption_entities)).values()
 
         try:
             if isinstance(media, str):
