@@ -39,7 +39,7 @@ class SendStory:
             width: int = 0,
             height: int = 0,
             thumb: Union[str, BinaryIO] = None,
-            privacy_rules: List["raw.base.InputPrivacyRule"] = None,
+            privacy_rules: List["raw.base.InputPrivacyRule"] = [InputPrivacyValueAllowAll()],
             pinned: Optional[bool] = None,
             no_forwards: Optional[bool] = None,
             period: Optional[int] = None,
@@ -79,8 +79,8 @@ class SendStory:
                 A thumbnail's width and height should not exceed 320 pixels.
                 Thumbnails can't be reused and can be only uploaded as a new file.
 
-            privacy_rules (:obj:`InputPrivacyRule <pyrogram.raw.base.InputPrivacyRule>`):
-                Privacy rules.
+            privacy_rules (List of :obj:`InputPrivacyRule <pyrogram.raw.base.InputPrivacyRule>`, *optional*):
+                List of privacy rules.
 
             pinned (``bool``, *optional*):
                 Pin the story.
@@ -191,28 +191,22 @@ class SendStory:
                         file=file,
                     )
 
-                while True:
-                    try:
-                        r = await self.invoke(
-                            raw.functions.stories.SendStory(
-                                media=media,
-                                privacy_rules=privacy_rules or [InputPrivacyValueAllowAll()],
-                                random_id=self.rnd_id(),
-                                pinned=pinned,
-                                noforwards=no_forwards,
-                                caption=message,
-                                entities=entities,
-                                period=period,
-                            )
+                    r = await self.invoke(
+                        raw.functions.stories.SendStory(
+                            media=media,
+                            privacy_rules=privacy_rules,
+                            random_id=self.rnd_id(),
+                            pinned=pinned,
+                            noforwards=no_forwards,
+                            caption=message,
+                            entities=entities,
+                            period=period,
                         )
-                    except FilePartMissing as e:
-                        await self.save_file(media, file_id=file.id, file_part=e.value)
-                    else:
-                        for i in r.updates:
-                            if isinstance(i, (raw.types.UpdateShortSentMessage,
-                                              raw.types.UpdateShort)):
-                                return await types.UpdateStory._parse(
-                                    i.id, i.media
-                                )
+                    )
+                    for i in r.updates:
+                        if isinstance(i, raw.types.UpdateStory):
+                            return types.UpdateStory._parse(
+                                story=i
+                            )
         except StopTransmission:
             return None
