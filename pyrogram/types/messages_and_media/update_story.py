@@ -16,32 +16,34 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .advanced import Advanced
-from .auth import Auth
-from .bots import Bots
-from .chats import Chats
-from .contacts import Contacts
-from .decorators import Decorators
-from .invite_links import InviteLinks
-from .messages import Messages
-from .password import Password
-from .stories import Stories
-from .users import Users
-from .utilities import Utilities
+from pyrogram import raw
+from ..object import Object
 
 
-class Methods(
-    Advanced,
-    Auth,
-    Bots,
-    Contacts,
-    Password,
-    Chats,
-    Users,
-    Messages,
-    Decorators,
-    Utilities,
-    InviteLinks,
-    Stories
-):
-    pass
+class UpdateStory(Object):
+    """Update story
+
+    Parameters:
+        user_id (``int`` ``64-bit``):
+            User identifier
+
+        story (:obj:`StoryItem <pyrogram.raw.base.StoryItem>`):
+            Story item
+    """
+
+    def __init__(
+        self, *,
+        user_id: int,
+        story: "raw.base.StoryItem"
+    ):
+        super().__init__()
+
+        self.user_id = user_id
+        self.story = story
+
+    @staticmethod
+    def _parse(story: "raw.types.UpdateStory") -> "UpdateStory":
+        return UpdateStory(
+            user_id=story.user_id,
+            story=story.story
+        )

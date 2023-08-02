@@ -16,32 +16,36 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .advanced import Advanced
-from .auth import Auth
-from .bots import Bots
-from .chats import Chats
-from .contacts import Contacts
-from .decorators import Decorators
-from .invite_links import InviteLinks
-from .messages import Messages
-from .password import Password
-from .stories import Stories
-from .users import Users
-from .utilities import Utilities
+from pyrogram import raw
+from pyrogram import types
+from ..object import Object
+from typing import List
 
 
-class Methods(
-    Advanced,
-    Auth,
-    Bots,
-    Contacts,
-    Password,
-    Chats,
-    Users,
-    Messages,
-    Decorators,
-    Utilities,
-    InviteLinks,
-    Stories
-):
-    pass
+class StoryViews(Object):
+    """Story views
+
+    Parameters:
+        views (List of :obj:`StoryViews <pyrogram.raw.base.StoryViews>`):
+            List of story views
+
+        users (List of :obj:`User <pyrogram.types.User>`):
+            List of users
+    """
+
+    def __init__(
+        self, *,
+        views: List["raw.base.StoryViews"],
+        users: List["types.User"]
+    ):
+        super().__init__()
+
+        self.views = views
+        self.users = users
+
+    @staticmethod
+    def _parse(story_views: "raw.types.StoryViews") -> "StoryViews":
+        return StoryViews(
+            views=story_views.views,
+            users=story_views.users
+        )

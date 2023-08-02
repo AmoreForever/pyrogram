@@ -16,32 +16,35 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .advanced import Advanced
-from .auth import Auth
-from .bots import Bots
-from .chats import Chats
-from .contacts import Contacts
-from .decorators import Decorators
-from .invite_links import InviteLinks
-from .messages import Messages
-from .password import Password
-from .stories import Stories
-from .users import Users
-from .utilities import Utilities
+import pyrogram
+from pyrogram import raw
 
 
-class Methods(
-    Advanced,
-    Auth,
-    Bots,
-    Contacts,
-    Password,
-    Chats,
-    Users,
-    Messages,
-    Decorators,
-    Utilities,
-    InviteLinks,
-    Stories
-):
-    pass
+class ToggleAllStoriesHidden:
+    async def toggle_all_stories_hidden(
+        self: "pyrogram.Client",
+        hidden: bool,
+    ) -> bool:
+        """Toggle all stories hidden.
+
+        .. include:: /_includes/usable-by/users-bots.rst
+
+        Parameters:
+            hidden (``bool``):
+                If set to ``True``, all stories will be hidden.
+
+        Returns:
+            ``bool``: On success, True is returned.
+
+        Example:
+            .. code-block:: python
+
+                # Toggle all stories hidden
+                await app.toggle_all_stories_hidden(True)
+        """
+        r = await self.invoke(
+            raw.functions.stories.ToggleAllStoriesHidden(
+                hidden=hidden
+            )
+        )
+        return r

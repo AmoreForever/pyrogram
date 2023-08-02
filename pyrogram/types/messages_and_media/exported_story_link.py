@@ -16,32 +16,28 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .advanced import Advanced
-from .auth import Auth
-from .bots import Bots
-from .chats import Chats
-from .contacts import Contacts
-from .decorators import Decorators
-from .invite_links import InviteLinks
-from .messages import Messages
-from .password import Password
-from .stories import Stories
-from .users import Users
-from .utilities import Utilities
+from pyrogram import raw
+from ..object import Object
 
 
-class Methods(
-    Advanced,
-    Auth,
-    Bots,
-    Contacts,
-    Password,
-    Chats,
-    Users,
-    Messages,
-    Decorators,
-    Utilities,
-    InviteLinks,
-    Stories
-):
-    pass
+class ExportedStoryLink(Object):
+    """A link to a story.
+
+    Parameters:
+        link (``str``):
+            Link to the story
+    """
+
+    def __init__(
+        self, *,
+        link: str
+    ):
+        super().__init__()
+
+        self.link = link
+
+    @staticmethod
+    def _parse(link: "raw.types.ExportedStoryLink") -> "ExportedStoryLink":
+        return ExportedStoryLink(
+            link=link.link
+        )
