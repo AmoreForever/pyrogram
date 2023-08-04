@@ -267,7 +267,7 @@ class Message(Object, Update):
 
         views (``int``, *optional*):
             Channel post views.
-        
+
         forwards (``int``, *optional*):
             Channel post forwards.
 
@@ -921,7 +921,7 @@ class Message(Object, Update):
             )
 
             if message.reply_to:
-                if message.reply_to.forum_topic:
+                if getattr(message.reply_to, "forum_topic", None):
                     if message.reply_to.reply_to_top_id:
                         thread_id = message.reply_to.reply_to_top_id
                         parsed_message.reply_to_message_id = message.reply_to.reply_to_msg_id
@@ -933,11 +933,14 @@ class Message(Object, Update):
                         parsed_message.topics = types.ForumTopic._parse(topics[thread_id])
                     else:
                         try:
-                            msg = await client.get_messages(parsed_message.chat.id,message.id)
+                            msg = await client.get_messages(parsed_message.chat.id, message.id)
                             if getattr(msg, "topics"):
                                 parsed_message.topics = msg.topics
                         except Exception:
                             pass
+                elif getattr(message.reply_to, "story_id", None):
+                    parsed_message.user_id = message.reply_to.user_id
+                    parsed_message.story_id = message.reply_to.story_id
                 else:
                     parsed_message.reply_to_message_id = message.reply_to.reply_to_msg_id
                     parsed_message.reply_to_top_message_id = message.reply_to.reply_to_top_id
@@ -975,24 +978,24 @@ class Message(Object, Update):
 
     async def get_media_group(self) -> List["types.Message"]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
-        
+
         Use as a shortcut for:
-        
+
         .. code-block:: python
 
             await client.get_media_group(
                 chat_id=message.chat.id,
                 message_id=message.id
             )
-            
+
         Example:
             .. code-block:: python
 
                 await message.get_media_group()
-                
+
         Returns:
             List of :obj:`~pyrogram.types.Message`: On success, a list of messages of the media group is returned.
-            
+
         Raises:
             ValueError: In case the passed message id doesn't belong to a media group.
         """
@@ -1653,7 +1656,7 @@ class Message(Object, Update):
 
             caption_entities (List of :obj:`~pyrogram.types.MessageEntity`):
                 List of special entities that appear in the caption, which can be specified instead of *parse_mode*.
-            
+
             file_name (``str``, *optional*):
                 File name of the document sent.
                 Defaults to file's path basename.
@@ -1669,7 +1672,7 @@ class Message(Object, Update):
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
-            
+
             schedule_date (:py:obj:`~datetime.datetime`, *optional*):
                 Date when the message will be automatically sent.
 
@@ -3497,7 +3500,7 @@ class Message(Object, Update):
             emoji (``str``, *optional*):
                 Reaction emoji.
                 Pass "" as emoji (default) to retract the reaction.
-             
+
             big (``bool``, *optional*):
                 Pass True to show a bigger and longer reaction.
                 Defaults to False.
