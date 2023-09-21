@@ -86,27 +86,13 @@ class CopyMediaGroup:
                 await app.copy_media_group(to_chat, from_chat, 123)
 
                 await app.copy_media_group(to_chat, from_chat, 123, captions="single caption")
-                
+
                 await app.copy_media_group(to_chat, from_chat, 123,
                     captions=["caption 1", None, ""])
         """
 
         media_group = await self.get_media_group(from_chat_id, message_id)
         multi_media = []
-
-        reply_to = None
-        if reply_to_message_id or message_thread_id:
-            reply_to_msg_id = None
-            top_msg_id = None
-            if message_thread_id:
-                if not reply_to_message_id:
-                    reply_to_msg_id = message_thread_id
-                else:
-                    reply_to_msg_id = reply_to_message_id
-                    top_msg_id = message_thread_id
-            else:
-                reply_to_msg_id = reply_to_message_id
-            reply_to = raw.types.InputReplyToMessage(reply_to_msg_id=reply_to_msg_id, top_msg_id=top_msg_id)
 
         for i, message in enumerate(media_group):
             if message.photo:
@@ -138,7 +124,7 @@ class CopyMediaGroup:
                 peer=await self.resolve_peer(chat_id),
                 multi_media=multi_media,
                 silent=disable_notification or None,
-                reply_to=reply_to,
+                reply_to=utils.get_reply_to(reply_to_message_id, message_thread_id),
                 schedule_date=utils.datetime_to_timestamp(schedule_date)
             ),
             sleep_threshold=60

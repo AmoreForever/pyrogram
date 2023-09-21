@@ -250,6 +250,19 @@ def get_peer_type(peer_id: int) -> str:
     raise ValueError(f"Peer id invalid: {peer_id}")
 
 
+def get_reply_to(
+    reply_to_message_id: Optional[int],
+    message_thread_id: Optional[int],
+) -> Optional[raw.types.InputReplyToMessage]:
+    if not any((reply_to_message_id, message_thread_id)):
+        return None
+
+    return raw.types.InputReplyToMessage(
+        reply_to_msg_id=reply_to_message_id or message_thread_id,  # type: ignore[arg-type]
+        top_msg_id=message_thread_id if reply_to_message_id else None,
+    )
+
+
 def get_channel_id(peer_id: int) -> int:
     return MAX_CHANNEL_ID - peer_id
 
