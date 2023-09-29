@@ -20,42 +20,34 @@ from typing import Union
 
 import pyrogram
 from pyrogram import raw
-from pyrogram import types
 
 
-class ExportStoryLink:
-    async def export_story_link(
+class ApplyBoost:
+    async def apply_boost(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
-        story_id: int,
-    ) -> "types.ExportedStoryLink":
-        """Export a story link.
+    ) -> bool:
+        """Apply boost
 
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
-                For your personal cloud (Saved Messages) you can simply use "me" or "self".
-                For a contact that exists in your Telegram address book you can use his phone number (str).
-
-            story_id (``int``):
-                Unique identifier of the target story.
 
         Returns:
-            ``str``: On success, a link to the exported story is returned.
+            ``str``: On success, a bool is returned.
 
         Example:
             .. code-block:: python
 
                 # Export a story link
-                link = app.export_story_link("me", 1)
+                link = app.apply_boost("me")
         """
         r = await self.invoke(
-            raw.functions.stories.ExportStoryLink(
+            raw.functions.stories.ApplyBoost(
                 peer=await self.resolve_peer(chat_id),
-                id=story_id
             )
         )
 
-        return r.link
+        return r

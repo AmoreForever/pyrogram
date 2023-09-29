@@ -20,11 +20,13 @@ from typing import List, Union, Iterable
 
 import pyrogram
 from pyrogram import raw
+from pyrogram import types
 
 
 class DeleteStories:
     async def delete_stories(
         self: "pyrogram.Client",
+        chat_id: Union[int, str],
         stories_ids: Union[int, Iterable[int]],
     ) -> List[int]:
         """Delete stories.
@@ -32,6 +34,11 @@ class DeleteStories:
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
+
             stories_ids (``int`` | ``list``):
                 Unique identifier (int) or list of unique identifiers (list of int) for the target stories.
 
@@ -42,16 +49,18 @@ class DeleteStories:
             .. code-block:: python
 
                 # Delete a single story
-                app.delete_stories(123456789)
+                app.delete_stories("me", 1)
 
                 # Delete multiple stories
-                app.delete_stories([123456789, 987654321])
+                app.delete_stories("me", [1, 2])
         """
         stories_ids = [stories_ids] if isinstance(stories_ids, int) else list(stories_ids)
 
         r = await self.invoke(
             raw.functions.stories.DeleteStories(
+                peer=await self.resolve_peer(chat_id),
                 id=stories_ids
             )
         )
-        return r
+
+        return types.List(r)

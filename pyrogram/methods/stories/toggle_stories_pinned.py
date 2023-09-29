@@ -25,6 +25,7 @@ from pyrogram import raw
 class ToggleStoriesPinned:
     async def toggle_stories_pinned(
         self: "pyrogram.Client",
+        chat_id: Union[int, str],
         stories_ids: Union[int, Iterable[int]],
         pinned: bool,
     ) -> List[int]:
@@ -33,6 +34,10 @@ class ToggleStoriesPinned:
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+
             stories_ids (List of ``int`` ``32-bit``):
                 List of unique identifiers of the target stories.
 
@@ -57,4 +62,5 @@ class ToggleStoriesPinned:
                 pinned=pinned
             )
         )
+
         return r

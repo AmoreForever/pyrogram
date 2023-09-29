@@ -25,7 +25,7 @@ from pyrogram import raw
 class IncrementStoryViews:
     async def increment_story_views(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
+        chat_id: Union[int, str],
         story_id: int,
     ) -> bool:
         """Increment story views.
@@ -33,8 +33,10 @@ class IncrementStoryViews:
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
-            user_id (``int`` | ``str``):
-                Unique identifier (int) or username (str) of the target user.
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
 
             story_id (``int``):
                 Unique identifier of the target story.
@@ -46,11 +48,13 @@ class IncrementStoryViews:
             .. code-block:: python
 
                 # Increment story views
-                await app.increment_story_views("@onetimeusername", 1)
+                await app.increment_story_views("me", 1)
         """
         r = await self.invoke(
             raw.functions.stories.IncrementStoryViews(
-                user_id=await self.resolve_peer(user_id)
+                peer=await self.resolve_peer(chat_id),
+                id=story_id
             )
         )
+
         return r

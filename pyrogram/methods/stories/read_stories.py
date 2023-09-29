@@ -25,16 +25,18 @@ from pyrogram import raw
 class ReadStories:
     async def read_stories(
         self: "pyrogram.Client",
-        user_id: Union[int, str],
-        max_id: int = 1 << 31 - 1,
+        chat_id: Union[int, str],
+        max_id: int = 0,
     ) -> List[int]:
         """Read stories.
 
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
-            user_id (``int`` | ``str``):
-                Unique identifier (int) or username (str) of the target user.
+            chat_id (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the target chat.
+                For your personal cloud (Saved Messages) you can simply use "me" or "self".
+                For a contact that exists in your Telegram address book you can use his phone number (str).
 
             max_id (``int``, *optional*):
                 Maximum identifier of the target story to read.
@@ -46,12 +48,13 @@ class ReadStories:
             .. code-block:: python
 
                 # Read stories
-                await app.read_stories("@onetimeusername")
+                await app.read_stories("me")
         """
         r = await self.invoke(
             raw.functions.stories.ReadStories(
-                user_id=await self.resolve_peer(user_id),
+                peer=await self.resolve_peer(chat_id),
                 max_id=max_id
             )
         )
+
         return r
